@@ -9,26 +9,36 @@ from transformers import (
     pipeline,
     # logging,
 )
-
+import argparse
+from tqdm import tqdm
 import json
 
 os.environ['CUDA_DEVICE_ORDER'] = "PCI_BUS_ID"
 # os.environ['CUDA_VISIBLE_DEVICES'] = "0,3"
 # os.environ['CUDA_VISIBLE_DEVICES'] = "5"
-os.environ['CUDA_VISIBLE_DEVICES'] = "1,3,4"
+os.environ['CUDA_VISIBLE_DEVICES'] = "0,1,3"
 
 # DEFAULT_SYSTEM_PROMPT = """\
 # You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.\
 # """
 
-# DEFAULT_SYSTEM_PROMPT = """\
-# You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.\
-# """
+DEFAULT_SYSTEM_PROMPT = """\
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.\
+"""
 
-DEFAULT_SYSTEM_PROMPT = ""
+# DEFAULT_SYSTEM_PROMPT = ""
 
 
+def parse_args():
+    parse = argparse.ArgumentParser(description='llms test')
+    parse.add_argument('-m', '--model', default="codellama/CodeLlama-7b-Instruct-hf", type=str, help='Model Name')
+    parse.add_argument('-t', '--test_data', default="test_data_groundtruth.json", type=str, help='Test data file path')
+    parse.add_argument('-e', '--example_data', default="example_data_groundtruth.json", type=str, help='Example data file path')
+    parse.add_argument('-n', '--num_ex', default="1", type=int, help='Number of code examples provided')
+    parse.add_argument('-o', '--output', default="cl7_test_result", type=str, help='Output file name')
 
+    args = parse.parse_args()
+    return args
 
 def read_json(file_path):
   with open(file_path,'r', encoding="utf-8") as f:
@@ -55,7 +65,6 @@ def get_prompt(chat_history:str, usr_input: str, index_num: int) -> str:
 
   if index_num==1:
     texts = [f'<s>[INST] <<SYS>>\n{DEFAULT_SYSTEM_PROMPT}\n<</SYS>>\n\n']
-    # message = message.strip() if do_strip else message
     texts.append(f'{usr_input} [/INST]')
     return ''.join(texts)
   else:
@@ -68,19 +77,13 @@ def get_prompt(chat_history:str, usr_input: str, index_num: int) -> str:
 
 
 
-def main() -> int:
-
-  ##### Test Model Name
-  model_name = "codellama/CodeLlama-7b-Instruct-hf"
-  # model_name = "TheBloke/CodeLlama-7B-Instruct-GPTQ"
+def main(model_name, test_data_json_path, example_data_json_path, output_name, ex_num) -> int:
 
   # Load base model
   model = AutoModelForCausalLM.from_pretrained(
       model_name,
       device_map="auto",
-      # max_memory={0: "29GiB", 3: "29GiB"}
-      # max_memory={5: "29GiB"}
-      max_memory={1: "24GiB", 3: "25GiB", 4: "18GiB",}
+      max_memory={0: "27GiB", 1: "24GiB", 3: "24GiB"}
   )
 
   ##### Device map check
@@ -95,7 +98,6 @@ def main() -> int:
   tokenizer.pad_token = tokenizer.eos_token
   tokenizer.padding_side = "right"
 
-  # pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, max_length=800)
   pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, max_length=4096)
 
   ##### Memory Test
@@ -112,33 +114,25 @@ def main() -> int:
   #   chat_history = response_result[0]['generated_text']
   #   print(chat_history)
 
-
-
-
   # import pdb
   # pdb.set_trace()
 
-
-
-
-  ##### Test Dataset
-  test_data_json_path = "test_data_groundtruth.json"
+  ##### Test Dataset Example Dataset
   test_data_dict = read_json(test_data_json_path)
-  ##### Example Dataset
-  example_data_json_path = "example_data_groundtruth.json"
   example_data_dict = read_json(example_data_json_path)
 
   num=0
   test_text=""
   prompt_question_response_dict = {}
-  # response_list = []
-  for (k,ele) in test_data_dict.items():
+  for (k,ele) in tqdm(test_data_dict.items()):
     num+=1
     codesample = ele["code"]
 
     ##### Prompt format and list
-    prompt = "The following code contaning a code issue of 'Fetch the whole entity only to check existence':\n" + example_data_dict["1"]["code"]
-    prompt += "\nAccording to the above example, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?\n" + codesample
+    prompt = f"The following {str(ex_num)} code examples contan a code issue of 'Fetch the whole entity only to check existence':\n"
+    for i in range(ex_num):
+      prompt += example_data_dict[str(i+1)]["code"] + "\n"
+    prompt += "According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?\n" + codesample
     usr_inputs=[prompt]
 
     chat_history = ""
@@ -159,11 +153,12 @@ def main() -> int:
     test_text+=str_num
     test_text+=chat_history
     print("\n NUMBER: ", num, "\n")
-    # print(chat_history)
-  write_txt(test_text, "cl7_test_result.txt")
-  write_json(prompt_question_response_dict, "cl7_test_result.json")
+    print(chat_history)
 
-  
+  write_txt(test_text, output_name+".txt")
+  write_json(prompt_question_response_dict, output_name+".json")
 
 if __name__ == '__main__':
-  main()
+
+  args = parse_args()
+  main(args.model, args.test_data, args.example_data, args.output, args.num_ex)

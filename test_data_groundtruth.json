@@ -1,1 +1,152 @@
-{"1": {"code_issue": "Fetch entity to check existence", "code": "public class EmployeeService {\n    @Autowired\n    private EmployeeRepository employeeRepository;\n\n    public boolean isEmployeeExist(Long id) {\n        Optional<Employee> employee = employeeRepository.findById(id);\n        return employee.isPresent();\n    }\n}", "index": "T"}, "2": {"code_issue": "Fetch entity to check existence", "code": "public class TransportationService {\n\n    @Autowired\n    private TransportationRepository transportationRepository;\n\n    @Transactional\n    public boolean checkIfTransportationExists(Long id) {\n        Transportation transportation = transportationRepository.findById(id).orElse(null);\n        return transportation != null;\n    }\n}", "index": "T"}, "3": {"code_issue": "Fetch entity to check existence", "code": "public class PatientService {\n\n    @Autowired\n    private PatientRepository patientRepository;\n\n    @Transactional\n    public boolean isPatientExists(String patientId) {\n        Patient patient = patientRepository.findByPatientId(patientId);\n        return patient != null;\n    }\n}", "index": "T"}, "4": {"code_issue": "Fetch entity to check existence", "code": "private void checkIfUserExists(int userId) {\n    if (userRepo.findById(userId).isEmpty()) {\n        throw new UserNotFoundException(\"User \" + userId + \" not found\");\n    }\n}", "index": "T"}, "5": {"code_issue": "Fetch entity to check existence", "code": "public boolean exist(Long id) {\n    Optional<Catalog> catalog = catalogRepository.findById(id);\n    return catalog.isPresent();\n}", "index": "T"}, "6": {"code_issue": "Fetch entity to check existence", "code": "public void deleteUser(Long userId) {\n    if (userRepository.findById(userId).isPresent()) {\n        userRepository.deleteById(userId);\n    } else {\n        throw new ObjectNotFoundException(String.format(\"User with ID: %s not found\", userId));\n    }\n}", "index": "T"}, "7": {"code_issue": "Fetch entity to check existence", "code": "public void updateChallengesRepositories() {\n\t challengeService\n\t     .getChallenges(username)\n\t     .flatMap(challenge -> challengeRepository.findById(challenge.getId())\n\t         .flatMap(existingChallenge -> Mono.empty())\n\t         .switchIfEmpty(challengeRepository.save(challenge))\n\t     )\n\t     .subscribe();\t\n}", "index": "T"}, "8": {"code_issue": "Fetch entity to check existence", "code": "public void deleteById(Long postId) {\n\tpostRepo.findById(postId).ifPresentOrElse(post -> {\n\t\tpostRepo.deleteById(postId);\n\t\tdeleteImageInStorageIfExists(getLastPathSegmentOrNull(post.getImageUrl()));\n\t}, () -> {\n\t\tthrow new ResponseStatusException(NOT_FOUND);\n\t});\n}", "index": "T"}, "9": {"code_issue": "Fetch entity to check existence", "code": "public Language updateLanguage(LanguageDTO newLanguage, Long id) {\n    Language languageEntity = languageConverter.dtoToEntity(newLanguage);\n    return languageRepository.findById(id)\n            .map(language -> {\n                language.setName(languageEntity.getName());\n                return languageRepository.save(language);\n            })\n            .orElseThrow(() -> new LanguageException(HttpStatus.NOT_FOUND));\n}", "index": "T"}, "10": {"code_issue": "Fetch entity to check existence", "code": "public HttpStatus deleteBookById(Long id) {\n    logger.info(\"Delete book with id:\" + id);\n\n    if (bookRepository.findById(id).isEmpty()) {\n        throw new EntityNotFoundException(\"Could not find author with id:\" + id);\n    }\n\n    bookRepository.deleteById(id);\n    return HttpStatus.OK;\n}", "index": "T"}, "11": {"code_issue": "Fetch entity to check existence", "code": "public void updateEMROrderTranslnStatus(Long id, String translnStatus) {\nOptional<EMROrder> emrOrderOptional = this.emrOrderRepository.findById(id)\nif (emrOrderOptional.isPresent()) {\nthis.emrOrderRepository.updateTranslnStatus(id,translnStatus)\n}\n}", "index": "T"}, "12": {"code_issue": "Fetch entity to check existence", "code": "public boolean isDocumentationExist(DocumentationSearchDTO documentationSearchDTO) {\nboolean isExists = false\nfinal List<Documentation> result = search(documentationSearchDTO)\nif (!result.isEmpty()) {\nisExists = true\n}\nreturn isExists\n}", "index": "T"}, "13": {"code_issue": "Fetch entity to check existence", "code": "private void checkMedicationTaskIdExist(Long taskId) {\nfinal Optional<Task> taskOpt = this.taskRepository.findById(taskId)\nif(!taskOpt.isPresent()) {\nthrow new WorkflowException(\"task-not-found-by-id\", new Long[]{taskId}, null)\n}\n\n}", "index": "T"}, "14": {"code_issue": "Fetch entity to check existence", "code": "private void checkEmrOrderTaskIdExist(Long taskId) {\nfinal Optional<Task> taskOptEmrOrder = this.taskRepository.findById(taskId)\nif(!taskOptEmrOrder.isPresent()) {\nthrow new WorkflowException(\"task-not-found-by-id\", new Long[]{taskId}, null)\n}\n\n}", "index": "T"}, "15": {"code_issue": "Fetch entity to check existence", "code": "private boolean checkEmrOrderHaveExistsChildRecords(String parentOrderId, Long tenantId) {\nif(StringUtils.isNotBlank(parentOrderId)&&tenantId!=null) {\nList<EMROrder> emrOrderList = this.emrOrderRepository.findByParentOrderIdAndParentOrderIdIsNotNullAndTenantIdIs(parentOrderId,tenantId)\nreturn !CollectionUtils.isEmpty(emrOrderList)\n} else {\nreturn false\n}\n}", "index": "T"}, "16": {"code_issue": "Search DB using nullable fields without null check", "code": "public class TransportationService {\n    @Autowired\n    private TransportationRepository transportationRepository;\n\n    public List<Transportation> searchTransportations(String source, String destination, Date departureTime,\n                                                      Date arrivalTime, Integer numberOfSeats) {\n        return transportationRepository.findBySourceAndDestinationAndDepartureTimeAndArrivalTimeAndNumberOfSeats(\n                source, destination, departureTime, arrivalTime, numberOfSeats);\n    }\n}", "index": "F"}, "17": {"code_issue": "Search DB using nullable fields without null check", "code": "public class PatientService {\n    @Autowired\n    private PatientRepository patientRepository;\n    \n    public List<Patient> searchPatients(String name, Integer age, String gender, String address, String phoneNumber) {\n        return patientRepository.findByNameAndAgeAndGenderAndAddressAndPhoneNumber(name, age, gender, address, phoneNumber);\n    }\n}", "index": "F"}, "18": {"code_issue": "Search DB using nullable fields without null check", "code": "public class EmployeeService {\n    @Autowired\n    private EmployeeRepository employeeRepository;\n\n    public List<Employee> searchEmployees(String department, String jobTitle, Integer age) {\n        List<Employee> employees = employeeRepository.findByDepartmentAndJobTitle(department, jobTitle);\n        if (age != null) {\n            employees = employees.stream().filter(e -> e.getAge().equals(age)).collect(Collectors.toList());\n        }\n        return employees;\n    }\n}", "index": "F"}, "19": {"code_issue": "Fetch entity to only use a single field", "code": "public Map<String, Integer> retrievePatientSourceRankingConfig() {\nfinal Map<String, Integer> rankingMap = new HashMap<>()\nfinal Optional<TokenDetailsDTO> tokenDetails = SecurityUtils.getCurrentTokenDetails()\nif (tokenDetails.isPresent() && tokenDetails.get().getTenantId() != null\n&& tokenDetails.get().getLocationId() != null) {\n\nfinal Long tenantId = tokenDetails.get().getTenantId()\n\nfinal Optional<LocationDTO> locationOpt = locationService.findById(tokenDetails.get().getLocationId())\nfinal Optional<TenantDTO> tenant = tenantService.findById(tenantId)\n\nif (tenant.isPresent() && locationOpt.isPresent()) {\nreturn extractedRetrievePatientSourceRankingConfig(locationOpt.get().getCode(), tenant.get().getCode())\n}\n}\nreturn rankingMap\n}", "index": "F"}, "20": {"code_issue": "Fetch entity to only use a single field", "code": "public Long getGroupIdByGroupCode(String groupCode) {\nList<AppGrouping> groups = this.appGroupingRepository.findAllByGroupCode(groupCode)\nif(!CollectionUtils.isEmpty(groups)) {\nreturn groups.get(0).getId()\n}\nreturn null\n}", "index": "F"}, "21": {"code_issue": "Fetch entity to only use a single field", "code": "private void getTaskListByPatientNric(TaskSearchDTO taskSearchDTO, List<Long> patientTaskIds) {\nfinal Optional<CustomerDTO> customerOpt = customerService\n.findByPersonRegistrationNo(taskSearchDTO.getPatientNric())\n\nif (!customerOpt.isPresent() || null == customerOpt.get().getId()) {\nthrow new WorkflowException(ExceptionHandlingConstants.EXCEPTION_MSGKEY_WORKFLOW_PATIENT_NOT_FOUND,\nnew Object[] { taskSearchDTO.getPatientNric() }, null)\n}\nfinal Set<Long> customerIds = new HashSet<>()\nif (!this.checkCustomerHasMergedPerson(customerOpt.get())) {\ncustomerIds.add(customerOpt.get().getId())\n} else {\nfinal List<CustomerDTO> customerList = customerService\n.findByMergedPersonId(customerOpt.get().getMergedPersonId())\ncustomerList.forEach(cust -> customerIds.add(cust.getId()))\n}\nif (taskSearchDTO.isIncludeRelated() && taskSearchDTO.getRelatedCustIdList() != null) {\ntaskSearchDTO.getRelatedCustIdList().forEach(relatedCustId -> {\nif (customerIds.stream().noneMatch(custId -> custId.longValue() == relatedCustId.longValue())) {\ncustomerIds.add(relatedCustId)\n}\n})\n}\npatientTaskIds.addAll(getTaskListByCustomerIds(customerIds))\n}", "index": "F"}}
+{
+    "1": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public class EmployeeService {\n    @Autowired\n    private EmployeeRepository employeeRepository;\n\n    public boolean isEmployeeExist(Long id) {\n        Optional<Employee> employee = employeeRepository.findById(id);\n        return employee.isPresent();\n    }\n}",
+        "index": "T"
+    },
+    "2": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public class TransportationService {\n\n    @Autowired\n    private TransportationRepository transportationRepository;\n\n    @Transactional\n    public boolean checkIfTransportationExists(Long id) {\n        Transportation transportation = transportationRepository.findById(id).orElse(null);\n        return transportation != null;\n    }\n}",
+        "index": "T"
+    },
+    "3": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public class PatientService {\n\n    @Autowired\n    private PatientRepository patientRepository;\n\n    @Transactional\n    public boolean isPatientExists(String patientId) {\n        Patient patient = patientRepository.findByPatientId(patientId);\n        return patient != null;\n    }\n}",
+        "index": "T"
+    },
+    "4": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "private void checkIfUserExists(int userId) {\n    if (userRepo.findById(userId).isEmpty()) {\n        throw new UserNotFoundException(\"User \" + userId + \" not found\");\n    }\n}",
+        "index": "T"
+    },
+    "5": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public boolean exist(Long id) {\n    Optional<Catalog> catalog = catalogRepository.findById(id);\n    return catalog.isPresent();\n}",
+        "index": "T"
+    },
+    "6": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public void deleteUser(Long userId) {\n    if (userRepository.findById(userId).isPresent()) {\n        userRepository.deleteById(userId);\n    } else {\n        throw new ObjectNotFoundException(String.format(\"User with ID: %s not found\", userId));\n    }\n}",
+        "index": "T"
+    },
+    "7": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public void updateChallengesRepositories() {\n\t challengeService\n\t     .getChallenges(username)\n\t     .flatMap(challenge -> challengeRepository.findById(challenge.getId())\n\t         .flatMap(existingChallenge -> Mono.empty())\n\t         .switchIfEmpty(challengeRepository.save(challenge))\n\t     )\n\t     .subscribe();\t\n}",
+        "index": "T"
+    },
+    "8": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public void deleteById(Long postId) {\n\tpostRepo.findById(postId).ifPresentOrElse(post -> {\n\t\tpostRepo.deleteById(postId);\n\t\tdeleteImageInStorageIfExists(getLastPathSegmentOrNull(post.getImageUrl()));\n\t}, () -> {\n\t\tthrow new ResponseStatusException(NOT_FOUND);\n\t});\n}",
+        "index": "T"
+    },
+    "9": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public Language updateLanguage(LanguageDTO newLanguage, Long id) {\n    Language languageEntity = languageConverter.dtoToEntity(newLanguage);\n    return languageRepository.findById(id)\n            .map(language -> {\n                language.setName(languageEntity.getName());\n                return languageRepository.save(language);\n            })\n            .orElseThrow(() -> new LanguageException(HttpStatus.NOT_FOUND));\n}",
+        "index": "T"
+    },
+    "10": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public HttpStatus deleteBookById(Long id) {\n    logger.info(\"Delete book with id:\" + id);\n\n    if (bookRepository.findById(id).isEmpty()) {\n        throw new EntityNotFoundException(\"Could not find author with id:\" + id);\n    }\n\n    bookRepository.deleteById(id);\n    return HttpStatus.OK;\n}",
+        "index": "T"
+    },
+    "11": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public void updateEMROrderTranslnStatus(Long id, String translnStatus) {\nOptional<EMROrder> emrOrderOptional = this.emrOrderRepository.findById(id)\nif (emrOrderOptional.isPresent()) {\nthis.emrOrderRepository.updateTranslnStatus(id,translnStatus)\n}\n}",
+        "index": "T"
+    },
+    "12": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public boolean isDocumentationExist(DocumentationSearchDTO documentationSearchDTO) {\nboolean isExists = false\nfinal List<Documentation> result = search(documentationSearchDTO)\nif (!result.isEmpty()) {\nisExists = true\n}\nreturn isExists\n}",
+        "index": "T"
+    },
+    "13": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "private void checkMedicationTaskIdExist(Long taskId) {\nfinal Optional<Task> taskOpt = this.taskRepository.findById(taskId)\nif(!taskOpt.isPresent()) {\nthrow new WorkflowException(\"task-not-found-by-id\", new Long[]{taskId}, null)\n}\n\n}",
+        "index": "T"
+    },
+    "14": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "private void checkEmrOrderTaskIdExist(Long taskId) {\nfinal Optional<Task> taskOptEmrOrder = this.taskRepository.findById(taskId)\nif(!taskOptEmrOrder.isPresent()) {\nthrow new WorkflowException(\"task-not-found-by-id\", new Long[]{taskId}, null)\n}\n\n}",
+        "index": "T"
+    },
+    "15": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "private boolean checkEmrOrderHaveExistsChildRecords(String parentOrderId, Long tenantId) {\nif(StringUtils.isNotBlank(parentOrderId)&&tenantId!=null) {\nList<EMROrder> emrOrderList = this.emrOrderRepository.findByParentOrderIdAndParentOrderIdIsNotNullAndTenantIdIs(parentOrderId,tenantId)\nreturn !CollectionUtils.isEmpty(emrOrderList)\n} else {\nreturn false\n}\n}",
+        "index": "T"
+    },
+    "16": {
+        "code_issue": "Search DB using nullable fields without null check",
+        "code": "public class TransportationService {\n    @Autowired\n    private TransportationRepository transportationRepository;\n\n    public List<Transportation> searchTransportations(String source, String destination, Date departureTime,\n                                                      Date arrivalTime, Integer numberOfSeats) {\n        return transportationRepository.findBySourceAndDestinationAndDepartureTimeAndArrivalTimeAndNumberOfSeats(\n                source, destination, departureTime, arrivalTime, numberOfSeats);\n    }\n}",
+        "index": "F"
+    },
+    "17": {
+        "code_issue": "Search DB using nullable fields without null check",
+        "code": "public class PatientService {\n    @Autowired\n    private PatientRepository patientRepository;\n    \n    public List<Patient> searchPatients(String name, Integer age, String gender, String address, String phoneNumber) {\n        return patientRepository.findByNameAndAgeAndGenderAndAddressAndPhoneNumber(name, age, gender, address, phoneNumber);\n    }\n}",
+        "index": "F"
+    },
+    "18": {
+        "code_issue": "Search DB using nullable fields without null check",
+        "code": "public class EmployeeService {\n    @Autowired\n    private EmployeeRepository employeeRepository;\n\n    public List<Employee> searchEmployees(String department, String jobTitle, Integer age) {\n        List<Employee> employees = employeeRepository.findByDepartmentAndJobTitle(department, jobTitle);\n        if (age != null) {\n            employees = employees.stream().filter(e -> e.getAge().equals(age)).collect(Collectors.toList());\n        }\n        return employees;\n    }\n}",
+        "index": "F"
+    },
+    "19": {
+        "code_issue": "Fetch entity to only use a single field",
+        "code": "public Map<String, Integer> retrievePatientSourceRankingConfig() {\nfinal Map<String, Integer> rankingMap = new HashMap<>()\nfinal Optional<TokenDetailsDTO> tokenDetails = SecurityUtils.getCurrentTokenDetails()\nif (tokenDetails.isPresent() && tokenDetails.get().getTenantId() != null\n&& tokenDetails.get().getLocationId() != null) {\n\nfinal Long tenantId = tokenDetails.get().getTenantId()\n\nfinal Optional<LocationDTO> locationOpt = locationService.findById(tokenDetails.get().getLocationId())\nfinal Optional<TenantDTO> tenant = tenantService.findById(tenantId)\n\nif (tenant.isPresent() && locationOpt.isPresent()) {\nreturn extractedRetrievePatientSourceRankingConfig(locationOpt.get().getCode(), tenant.get().getCode())\n}\n}\nreturn rankingMap\n}",
+        "index": "F"
+    },
+    "20": {
+        "code_issue": "Fetch entity to only use a single field",
+        "code": "public Long getGroupIdByGroupCode(String groupCode) {\nList<AppGrouping> groups = this.appGroupingRepository.findAllByGroupCode(groupCode)\nif(!CollectionUtils.isEmpty(groups)) {\nreturn groups.get(0).getId()\n}\nreturn null\n}",
+        "index": "F"
+    },
+    "21": {
+        "code_issue": "Fetch entity to only use a single field",
+        "code": "private void getTaskListByPatientNric(TaskSearchDTO taskSearchDTO, List<Long> patientTaskIds) {\nfinal Optional<CustomerDTO> customerOpt = customerService\n.findByPersonRegistrationNo(taskSearchDTO.getPatientNric())\n\nif (!customerOpt.isPresent() || null == customerOpt.get().getId()) {\nthrow new WorkflowException(ExceptionHandlingConstants.EXCEPTION_MSGKEY_WORKFLOW_PATIENT_NOT_FOUND,\nnew Object[] { taskSearchDTO.getPatientNric() }, null)\n}\nfinal Set<Long> customerIds = new HashSet<>()\nif (!this.checkCustomerHasMergedPerson(customerOpt.get())) {\ncustomerIds.add(customerOpt.get().getId())\n} else {\nfinal List<CustomerDTO> customerList = customerService\n.findByMergedPersonId(customerOpt.get().getMergedPersonId())\ncustomerList.forEach(cust -> customerIds.add(cust.getId()))\n}\nif (taskSearchDTO.isIncludeRelated() && taskSearchDTO.getRelatedCustIdList() != null) {\ntaskSearchDTO.getRelatedCustIdList().forEach(relatedCustId -> {\nif (customerIds.stream().noneMatch(custId -> custId.longValue() == relatedCustId.longValue())) {\ncustomerIds.add(relatedCustId)\n}\n})\n}\npatientTaskIds.addAll(getTaskListByCustomerIds(customerIds))\n}",
+        "index": "F"
+    },
+    "22": {
+        "code_issue": "Redundant api call",
+        "code": "public String chat(List<ChatMessage> messages, Integer maxTokens, Double temperature) {\n    OpenAiService openAiService = new OpenAiService(apiKey, Duration.ofSeconds(55));\n    int numRetries = 3;\n    for (int i = 0; i < numRetries; i++) {\n        try {\n            ChatCompletionRequest chatCompletionRequest = new ChatCompletionRequest();\n            chatCompletionRequest.setModel(this.model);\n            chatCompletionRequest.setTemperature(temperature);\n            chatCompletionRequest.setMessages(messages);\n            chatCompletionRequest.setMaxTokens(maxTokens);\n            openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage().getContent();\n            return openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage().getContent();\n        } catch (OpenAiHttpException e) {\n            if (e.statusCode == 429) {\n                logger.warn('Rate limit exceeded. Retrying after 20 seconds.');\n                try {\n                    Thread.sleep(20000);\n                } catch (InterruptedException ex) {\n                    ex.printStackTrace();\n                }\n                continue;\n            } else {\n                throw new RuntimeException(e);\n            }\n        }\n    }\n    throw new RuntimeException('Failed to get a response from OpenAI API.');\n}",
+        "index": "F"
+    },
+    "23": {
+        "code_issue": "Redundant db call",
+        "code": "public OAuthClient updateOpenIDConnectClientVerifiedStatus(UserInfo userInfo, String clientId, boolean verifiedStatus) {\n    ValidateArgument.required(userInfo, \"User info\");\n    ValidateArgument.requiredNotBlank(clientId, \"Client ID\");\n    \n    if (!authManager.isACTTeamMemberOrAdmin(userInfo)) {\n        throw new UnauthorizedException(\"You must be an administrator or a member of the ACT team to update the verification status of a client\");\n    }\n\n    OAuthClient currentClient = oauthClientDao.selectOAuthClientForUpdate(clientId);\n\n    if (verifiedStatus != BooleanUtils.isTrue(currentClient.getVerified())) {\n        currentClient.setVerified(verifiedStatus);\n        currentClient.setModifiedOn(new Date());\n        currentClient.setEtag(UUID.randomUUID().toString());\n        oauthClientDao.updateOAuthClient(currentClient);\n    }\n\n    return oauthClientDao.getOAuthClient(clientId);\n",
+        "index": "F"
+    },
+    "24": {
+        "code_issue": "Redundant db call",
+        "code": "private void showUnitSpinner() {\n    SQLiteDatabase db = mDbHelper.getReadableDatabase();\n    Cursor cursor = db.query(UnitContract.UnitEntry.TABLE_NAME, null, null, null, null, null, null);\n    AlertDialog.Builder builder = new AlertDialog.Builder(this);\n    builder.setTitle(\"Convert to\");\n    String[] units = new String[mUnitNameArray.size()];\n    builder.setItems(mUnitNameArray.toArray(units), new DialogInterface.OnClickListener() {\n                @Override\n                public void onClick(DialogInterface dialogInterface, int i) {\n                    Toast.makeText(FoodViewActivity.this, \"You clicked on \" + mUnitNameArray.get(i), Toast.LENGTH_LONG).show();\n                    dialogInterface.dismiss();\n                }\n            });\n    builder.show();\n}",
+        "index": "F"
+    },
+    "25": {
+        "code_issue": "Redundant db call",
+        "code": "private boolean isFeedbackSessionViewableTo(\n        FeedbackSessionAttributes session,\n        String userEmail) throws EntityDoesNotExistException {\n\n    if (fsDb.getFeedbackSession(\n            session.courseId,\n            session.feedbackSessionName) == null) {\n        throw new EntityDoesNotExistException(\n                \"Trying to get a feedback session that does not exist.\");\n    }\n    // Check for private type first.\n    if (session.feedbackSessionType == FeedbackSessionType.PRIVATE) {\n        return session.creatorEmail.equals(userEmail);\n    }\n    // Allow all instructors to view always\n    InstructorAttributes instructor = instructorsLogic.\n            getInstructorForEmail(session.courseId, userEmail);\n    if (instructor != null) {\n        return instructorsLogic.isEmailOfInstructorOfCourse(\n                instructor.email, session.courseId);\n    }\n    // Allow viewing if session is viewable to students\n    return isFeedbackSessionViewableToStudents(session);\n}",
+        "index": "F"
+    },
+    "26": {
+        "code_issue": "Redundant db call",
+        "code": "public String loginUser(String username, String password) {\n    User user = getByUserName(username);\n    if (user == null) {\n        logger.info(\"Failed to find user in DB:\" + username);\n    } else\n        logger.info(\"Getting from DB user:\" + username);\n\n    return (user != null) && (Password.checkPassword(password, user.getSalt(), user.getPassword())) ?\n            getByUserName(username).getFirstname() :\n            null;\n}",
+        "index": "F"
+    },
+    "27": {
+        "code_issue": "Redundant db call",
+        "code": "public Review getReviewById(Long reviewId) {\n\n    if (reviewRepository.findById(reviewId).isPresent()) {\n        return reviewRepository.findById(reviewId).get();\n    } else {\n        return null;\n    }\n}",
+        "index": "F"
+    },
+    "28": {
+        "code_issue": "Redundant db call",
+        "code": "public String getConversationFeedback(String conversationId) {\n    StringBuilder urlBuilder = new StringBuilder(getFeedbackUrl());\n    if (!TextUtils.isEmpty(conversationId)) {\n        urlBuilder.append(\"/\");\n        urlBuilder.append(conversationId);\n    }\n    String response = httpRequestUtils.getResponse(urlBuilder.toString(), \"application/json\", \"application/json\");\n\n    Utils.printLog(context, TAG, \"Get feedback response: \" + response);\n\n    return httpRequestUtils.getResponse(urlBuilder.toString(), \"application/json\", \"application/json\");\n}",
+        "index": "F"
+    },
+    "29": {
+        "code_issue": "Redundant db call",
+        "code": "public Task findTask(Long taskId) {\n    check();\n    Task task = null;\n    if( this.pessimisticLocking ) {\n        task = this.em.find( TaskImpl.class, taskId, LockModeType.PESSIMISTIC_FORCE_INCREMENT );\n    }\n    task = this.em.find( TaskImpl.class, taskId );\n    return task;\n}\n",
+        "index": "F"
+    },
+    "30": {
+        "code_issue": "Redundant db call",
+        "code": "public void removeHUDMessage(final int key) {\n    if (this.hudMessages.containsKey(key)) {\n        this.hudMessages.remove(key);\n    }\n}",
+        "index": "F"
+    }
+}

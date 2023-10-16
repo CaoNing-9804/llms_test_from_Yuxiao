@@ -10,13 +10,15 @@ from transformers import (
     pipeline,
     # logging,
 )
+import argparse
+from tqdm import tqdm
 import json
 
 
 os.environ['CUDA_DEVICE_ORDER'] = "PCI_BUS_ID"
 # os.environ['CUDA_VISIBLE_DEVICES'] = "0,3"
 # os.environ['CUDA_VISIBLE_DEVICES'] = "5"
-os.environ['CUDA_VISIBLE_DEVICES'] = "1,3,4"
+os.environ['CUDA_VISIBLE_DEVICES'] = "0,1,3"
 
 # DEFAULT_SYSTEM_PROMPT = "Below is a dialogue between a human user and an AI assistant. The assistant is happy to help with almost anything, and will do its best to understand exactly what is needed."
 
@@ -31,7 +33,16 @@ os.environ['CUDA_VISIBLE_DEVICES'] = "1,3,4"
 DEFAULT_SYSTEM_PROMPT = ""
 
 
+def parse_args():
+    parse = argparse.ArgumentParser(description='llms test')
+    parse.add_argument('-m', '--model', default="HuggingFaceH4/starchat-beta", type=str, help='Model Name')
+    parse.add_argument('-t', '--test_data', default="test_data_groundtruth.json", type=str, help='Test data file path')
+    parse.add_argument('-e', '--example_data', default="example_data_groundtruth.json", type=str, help='Example data file path')
+    parse.add_argument('-n', '--num_ex', default="1", type=int, help='Number of code examples provided')
+    parse.add_argument('-o', '--output', default="starchat_test_result", type=str, help='Output file name')
 
+    args = parse.parse_args()
+    return args
 
 def read_json(file_path):
   with open(file_path,'r', encoding="utf-8") as f:
@@ -78,20 +89,13 @@ def get_starchat_prompt(chat_history:str, usr_input: str, index_num: int) -> str
 
 
 
-def main() -> int:
-
-  ##### Test Model Name
-  # model_name = "TheBloke/starchat-beta-GPTQ"
-  model_name = "HuggingFaceH4/starchat-beta"
+def main(model_name, test_data_json_path, example_data_json_path, output_name, ex_num) -> int:
 
   # Load base model
   model = AutoModelForCausalLM.from_pretrained(
       model_name,
       device_map="auto",
-      # max_memory={0: "29GiB", 3: "29GiB"}
-      # max_memory={5: "29GiB"}
-      # max_memory={0: "9GiB", 1: "9GiB", 3: "25GiB"}
-      max_memory={0: "9GiB", 3: "25GiB", 4: "20GiB"}
+      max_memory={0: "27GiB", 1: "24GiB", 3: "24GiB"}
   )
 
   ##### Device map check
@@ -130,24 +134,24 @@ def main() -> int:
   # pdb.set_trace()
 
 
-  ##### Test Dataset
-  test_data_json_path = "test_data_groundtruth.json"
+  ##### Test Dataset Example Dataset
+
   test_data_dict = read_json(test_data_json_path)
-  ##### Example Dataset
-  example_data_json_path = "example_data_groundtruth.json"
   example_data_dict = read_json(example_data_json_path)
 
   num=0
   test_text=""
   prompt_question_response_dict = {}
   # response_list = []
-  for (k,ele) in test_data_dict.items():
+  for (k,ele) in tqdm(test_data_dict.items()):
     num+=1
     codesample = ele["code"]
 
     ##### Prompt format and list
-    prompt = "The following code contaning a code issue of 'Fetch the whole entity only to check existence':\n" + example_data_dict["1"]["code"]
-    prompt += "\nAccording to the above example, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?\n" + codesample
+    prompt = f"The following {str(ex_num)} code examples contan a code issue of 'Fetch the whole entity only to check existence':\n"
+    for i in range(ex_num):
+      prompt += example_data_dict[str(i+1)]["code"] + "\n"
+    prompt += "\nAccording to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?\n" + codesample
     usr_inputs=[prompt]
 
     chat_history = ""
@@ -171,9 +175,10 @@ def main() -> int:
     test_text+=chat_history
     print("\n k NUMBER: ", str_num, "\n")
     # print(chat_history)
-  write_txt(test_text, "starchat_test_result.txt")
-  write_json(prompt_question_response_dict, "starchat_test_result.json")
+  write_txt(test_text, output_name+".txt")
+  write_json(prompt_question_response_dict, output_name+".json")
 
 
 if __name__ == '__main__':
-  main()
+  args = parse_args()
+  main(args.model, args.test_data, args.example_data, args.output, args.num_ex)
