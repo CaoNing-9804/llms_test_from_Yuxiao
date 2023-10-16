@@ -1,0 +1,17 @@
+{
+    "1": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public class EmployeeService {\n    @Autowired\n    private EmployeeRepository employeeRepository;\n\n    public boolean isEmployeeExist(Long id) {\n        Optional<Employee> employee = employeeRepository.findById(id);\n        return employee.isPresent();\n    }\n}",
+        "index": "T"
+    },
+    "2": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public boolean isEntityExist(Long entityId) {        \n    Optional<Entity> optionalEntity = entityRepository.findById(entityId);\n    return optionalEntity.isPresent();\n}",
+        "index": "T"
+    },
+    "3": {
+        "code_issue": "Fetch entity to check existence",
+        "code": "public boolean isProductExist(Long id) {\n    Product product = entityManager.find(Product.class, id);\n    return product != null;\n}",
+        "index": "T"
+    }
+}
