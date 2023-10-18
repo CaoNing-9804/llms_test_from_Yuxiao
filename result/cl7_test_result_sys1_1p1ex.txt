@@ -1,0 +1,916 @@
+﻿
+ NUMBER: 1
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+} [/INST]  Yes.
+ NUMBER: 2
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public class TransportationService {
+
+    @Autowired
+    private TransportationRepository transportationRepository;
+
+    @Transactional
+    public boolean checkIfTransportationExists(Long id) {
+        Transportation transportation = transportationRepository.findById(id).orElse(null);
+        return transportation != null;
+    }
+} [/INST]  Yes, there is a code issue of "Fetch the whole entity only to check existence" in the `TransportationService` class.
+
+In the `checkIfTransportationExists` method, the `Transportation` entity is fetched using the `findById` method, and then the `orElse` method is used to return `null` if the entity is not found. However, this approach has a performance issue because it fetches the whole entity, even though we only need to check if the entity exists.
+
+A better approach would be to use the `existsById` method provided by the `JpaRepository` interface, which returns a `boolean` value indicating whether the entity exists or not. This approach avoids fetching the whole entity, which can improve performance.
+
+Here's an example of how the `checkIfTransportationExists` method could be rewritten using the `existsById` method:
+```
+@Transactional
+public boolean checkIfTransportationExists(Long id) {
+    return transportationRepository.existsById(id);
+}
+```
+ NUMBER: 3
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public class PatientService {
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Transactional
+    public boolean isPatientExists(String patientId) {
+        Patient patient = patientRepository.findByPatientId(patientId);
+        return patient != null;
+    }
+} [/INST]  Yes, there is a code issue of "Fetch the whole entity only to check existence" in the `PatientService` class.
+
+In the `isPatientExists` method, the `Patient` entity is fetched from the database using the `findByPatientId` method, and then the `patient` variable is checked for nullity. This is an example of "Fetch the whole entity only to check existence" because the entire `Patient` entity is fetched from the database, even though only the `patientId` field is needed to check if the patient exists.
+
+To fix this issue, the `Patient` entity could be fetched using the `findById` method, which would only retrieve the `patientId` field, and then the `patient` variable could be checked for nullity. This would be more efficient and reduce the amount of data being transferred between the client and the server.
+ NUMBER: 4
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+private void checkIfUserExists(int userId) {
+    if (userRepo.findById(userId).isEmpty()) {
+        throw new UserNotFoundException("User " + userId + " not found");
+    }
+} [/INST]  Yes, there is a code issue of "Fetch the whole entity only to check existence" in the `checkIfUserExists` method.
+
+The method fetches the entire user entity with `userRepo.findById(userId)`, which is unnecessary and inefficient. Instead, the method should use `userRepo.existsById(userId)` to check if the user exists without fetching the entire entity. This will reduce the number of database queries and improve the performance of the method.
+ NUMBER: 5
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public boolean exist(Long id) {
+    Optional<Catalog> catalog = catalogRepository.findById(id);
+    return catalog.isPresent();
+} [/INST]  Yes.
+ NUMBER: 6
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public void deleteUser(Long userId) {
+    if (userRepository.findById(userId).isPresent()) {
+        userRepository.deleteById(userId);
+    } else {
+        throw new ObjectNotFoundException(String.format("User with ID: %s not found", userId));
+    }
+} [/INST]  Yes, there is a code issue of "Fetch the whole entity only to check existence" in the `deleteUser` method.
+
+The issue is that the method fetches the whole entity using `findById` and then checks if it is present. This is not necessary, as the `deleteById` method already checks if the entity exists before deleting it.
+
+Instead of fetching the whole entity, the method should use `deleteById` directly, like this:
+```
+public void deleteUser(Long userId) {
+    userRepository.deleteById(userId);
+}
+```
+This approach is more efficient and avoids the unnecessary overhead of fetching the whole entity.
+ NUMBER: 7
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public void updateChallengesRepositories() {
+	 challengeService
+	     .getChallenges(username)
+	     .flatMap(challenge -> challengeRepository.findById(challenge.getId())
+	         .flatMap(existingChallenge -> Mono.empty())
+	         .switchIfEmpty(challengeRepository.save(challenge))
+	     )
+	     .subscribe();	
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code is using the `findById` method of the `challengeRepository` to check if a challenge with the given ID exists, and if it does, it saves the challenge. This approach is more efficient than fetching the whole entity and checking its existence, as it only retrieves the necessary data from the database.
+ NUMBER: 8
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public void deleteById(Long postId) {
+	postRepo.findById(postId).ifPresentOrElse(post -> {
+		postRepo.deleteById(postId);
+		deleteImageInStorageIfExists(getLastPathSegmentOrNull(post.getImageUrl()));
+	}, () -> {
+		throw new ResponseStatusException(NOT_FOUND);
+	});
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code is using the `findById` method of the `postRepo` to fetch the entity with the given `postId`, and then checking if the entity is present before deleting it. This is a more efficient way of checking if an entity exists, as it only fetches the entity if it exists, rather than fetching the whole entity and then checking if it is present.
+ NUMBER: 9
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public Language updateLanguage(LanguageDTO newLanguage, Long id) {
+    Language languageEntity = languageConverter.dtoToEntity(newLanguage);
+    return languageRepository.findById(id)
+            .map(language -> {
+                language.setName(languageEntity.getName());
+                return languageRepository.save(language);
+            })
+            .orElseThrow(() -> new LanguageException(HttpStatus.NOT_FOUND));
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code is using the `findById` method of the `LanguageRepository` to fetch the entity with the given `id`, and then checking if the entity is present before updating it. This is a more efficient way of checking if an entity exists, as it only fetches the entity if it is present, rather than fetching the whole entity and then checking if it is present.
+ NUMBER: 10
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public HttpStatus deleteBookById(Long id) {
+    logger.info("Delete book with id:" + id);
+
+    if (bookRepository.findById(id).isEmpty()) {
+        throw new EntityNotFoundException("Could not find author with id:" + id);
+    }
+
+    bookRepository.deleteById(id);
+    return HttpStatus.OK;
+} [/INST]  Yes, there is a code issue of "Fetch the whole entity only to check existence" in the `deleteBookById` method.
+
+The method fetches the entire book entity using `bookRepository.findById(id)`, which is unnecessary and inefficient. Instead, the method should use `bookRepository.existsById(id)` to check if the book exists, which is a more efficient and appropriate way to check for the existence of an entity.
+
+By using `existsById`, the method can avoid fetching the entire book entity, which can save time and resources. Additionally, it is more appropriate to use `existsById` because it is a more specific and accurate way to check for the existence of an entity, as it only checks for the existence of the entity with the given ID, rather than fetching the entire entity.
+ NUMBER: 11
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public void updateEMROrderTranslnStatus(Long id, String translnStatus) {
+Optional<EMROrder> emrOrderOptional = this.emrOrderRepository.findById(id)
+if (emrOrderOptional.isPresent()) {
+this.emrOrderRepository.updateTranslnStatus(id,translnStatus)
+}
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code fetches the entity using `findById()` and then checks if it is present using `isPresent()`. This is a common pattern in Spring Data JPA and is not considered an issue.
+ NUMBER: 12
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public boolean isDocumentationExist(DocumentationSearchDTO documentationSearchDTO) {
+boolean isExists = false
+final List<Documentation> result = search(documentationSearchDTO)
+if (!result.isEmpty()) {
+isExists = true
+}
+return isExists
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code fetches the whole entity only to check its existence, which is a common practice in software development. The `search` method returns a list of `Documentation` objects, and the `isEmpty` method is used to check if the list is empty. If the list is not empty, it means that the entity exists, and the `isExists` variable is set to `true`.
+ NUMBER: 13
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+private void checkMedicationTaskIdExist(Long taskId) {
+final Optional<Task> taskOpt = this.taskRepository.findById(taskId)
+if(!taskOpt.isPresent()) {
+throw new WorkflowException("task-not-found-by-id", new Long[]{taskId}, null)
+}
+
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code.
+
+In the `checkMedicationTaskIdExist` method, the `taskRepository.findById(taskId)` method is used to fetch the `Task` entity with the given `taskId`. The `Optional` returned by this method is then checked using the `isPresent()` method to determine if the `Task` entity exists. If the `Task` entity does not exist, a `WorkflowException` is thrown.
+
+This approach is considered a best practice in software development because it allows for efficient and efficient data retrieval, while also providing a clear and concise way to handle the case where the `Task` entity does not exist.
+ NUMBER: 14
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+private void checkEmrOrderTaskIdExist(Long taskId) {
+final Optional<Task> taskOptEmrOrder = this.taskRepository.findById(taskId)
+if(!taskOptEmrOrder.isPresent()) {
+throw new WorkflowException("task-not-found-by-id", new Long[]{taskId}, null)
+}
+
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code.
+
+In the `checkEmrOrderTaskIdExist` method, the `taskRepository.findById(taskId)` method is used to fetch the `Task` entity with the given `taskId`. The `Optional` returned by this method is then checked using the `isPresent()` method to determine if the `Task` entity exists. If the `Task` entity does not exist, a `WorkflowException` is thrown.
+
+This approach is considered a best practice in software development because it allows for efficient and efficient data retrieval, while also avoiding the need to fetch the entire entity just to check its existence.
+ NUMBER: 15
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+private boolean checkEmrOrderHaveExistsChildRecords(String parentOrderId, Long tenantId) {
+if(StringUtils.isNotBlank(parentOrderId)&&tenantId!=null) {
+List<EMROrder> emrOrderList = this.emrOrderRepository.findByParentOrderIdAndParentOrderIdIsNotNullAndTenantIdIs(parentOrderId,tenantId)
+return !CollectionUtils.isEmpty(emrOrderList)
+} else {
+return false
+}
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code is using the `findByParentOrderIdAndParentOrderIdIsNotNullAndTenantIdIs` method of the `emrOrderRepository` to fetch only the necessary fields of the `EMROrder` entity, which is a more efficient approach than fetching the whole entity.
+ NUMBER: 16
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public class TransportationService {
+    @Autowired
+    private TransportationRepository transportationRepository;
+
+    public List<Transportation> searchTransportations(String source, String destination, Date departureTime,
+                                                      Date arrivalTime, Integer numberOfSeats) {
+        return transportationRepository.findBySourceAndDestinationAndDepartureTimeAndArrivalTimeAndNumberOfSeats(
+                source, destination, departureTime, arrivalTime, numberOfSeats);
+    }
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The `searchTransportations` method in the `TransportationService` class uses the `findBySourceAndDestinationAndDepartureTimeAndArrivalTimeAndNumberOfSeats` method of the `TransportationRepository` class to fetch a list of transportations that match the given criteria. This method returns a list of `Transportation` objects, which are then returned by the `searchTransportations` method.
+
+Therefore, the code does not fetch the whole entity only to check existence, as the `findBySourceAndDestinationAndDepartureTimeAndArrivalTimeAndNumberOfSeats` method returns a list of `Transportation` objects that match the given criteria, rather than a single `Transportation` object.
+ NUMBER: 17
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public class PatientService {
+    @Autowired
+    private PatientRepository patientRepository;
+    
+    public List<Patient> searchPatients(String name, Integer age, String gender, String address, String phoneNumber) {
+        return patientRepository.findByNameAndAgeAndGenderAndAddressAndPhoneNumber(name, age, gender, address, phoneNumber);
+    }
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The `PatientService` class is using the `PatientRepository` to search for patients based on their name, age, gender, address, and phone number. The `findByNameAndAgeAndGenderAndAddressAndPhoneNumber` method is used to retrieve a list of patients that match the given criteria. This method does not fetch the whole entity, but rather retrieves only the necessary fields to check for existence.
+ NUMBER: 18
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public List<Employee> searchEmployees(String department, String jobTitle, Integer age) {
+        List<Employee> employees = employeeRepository.findByDepartmentAndJobTitle(department, jobTitle);
+        if (age != null) {
+            employees = employees.stream().filter(e -> e.getAge().equals(age)).collect(Collectors.toList());
+        }
+        return employees;
+    }
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The `searchEmployees` method fetches a list of employees based on the given department, job title, and age, and then filters the list to only include employees with the given age. This is a common pattern in software development, and it is not considered an issue to fetch the whole entity only to check its existence.
+ NUMBER: 19
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public Map<String, Integer> retrievePatientSourceRankingConfig() {
+final Map<String, Integer> rankingMap = new HashMap<>()
+final Optional<TokenDetailsDTO> tokenDetails = SecurityUtils.getCurrentTokenDetails()
+if (tokenDetails.isPresent() && tokenDetails.get().getTenantId() != null
+&& tokenDetails.get().getLocationId() != null) {
+
+final Long tenantId = tokenDetails.get().getTenantId()
+
+final Optional<LocationDTO> locationOpt = locationService.findById(tokenDetails.get().getLocationId())
+final Optional<TenantDTO> tenant = tenantService.findById(tenantId)
+
+if (tenant.isPresent() && locationOpt.isPresent()) {
+return extractedRetrievePatientSourceRankingConfig(locationOpt.get().getCode(), tenant.get().getCode())
+}
+}
+return rankingMap
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code is using the `Optional` class to check if the `TokenDetailsDTO` and `LocationDTO` objects are present, and if they are, it fetches the whole entity to retrieve the necessary information. This is a common pattern in Java and other programming languages, and it is not considered an issue.
+ NUMBER: 20
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public Long getGroupIdByGroupCode(String groupCode) {
+List<AppGrouping> groups = this.appGroupingRepository.findAllByGroupCode(groupCode)
+if(!CollectionUtils.isEmpty(groups)) {
+return groups.get(0).getId()
+}
+return null
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the given code. The code fetches the whole entity using `findAllByGroupCode` and then checks if the collection is empty or not. If the collection is not empty, it returns the first element's ID. This approach is not considered an issue of "Fetch the whole entity only to check existence" because it is not fetching the whole entity just to check its existence.
+ NUMBER: 21
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+private void getTaskListByPatientNric(TaskSearchDTO taskSearchDTO, List<Long> patientTaskIds) {
+final Optional<CustomerDTO> customerOpt = customerService
+.findByPersonRegistrationNo(taskSearchDTO.getPatientNric())
+
+if (!customerOpt.isPresent() || null == customerOpt.get().getId()) {
+throw new WorkflowException(ExceptionHandlingConstants.EXCEPTION_MSGKEY_WORKFLOW_PATIENT_NOT_FOUND,
+new Object[] { taskSearchDTO.getPatientNric() }, null)
+}
+final Set<Long> customerIds = new HashSet<>()
+if (!this.checkCustomerHasMergedPerson(customerOpt.get())) {
+customerIds.add(customerOpt.get().getId())
+} else {
+final List<CustomerDTO> customerList = customerService
+.findByMergedPersonId(customerOpt.get().getMergedPersonId())
+customerList.forEach(cust -> customerIds.add(cust.getId()))
+}
+if (taskSearchDTO.isIncludeRelated() && taskSearchDTO.getRelatedCustIdList() != null) {
+taskSearchDTO.getRelatedCustIdList().forEach(relatedCustId -> {
+if (customerIds.stream().noneMatch(custId -> custId.longValue() == relatedCustId.longValue())) {
+customerIds.add(relatedCustId)
+}
+})
+}
+patientTaskIds.addAll(getTaskListByCustomerIds(customerIds))
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code is using the `findById` method of the `EmployeeRepository` to fetch the employee with the given ID, and then checking if the employee is present using the `isPresent` method. This is a common and efficient way to check if an entity exists in a database.
+ NUMBER: 22
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public String chat(List<ChatMessage> messages, Integer maxTokens, Double temperature) {
+    OpenAiService openAiService = new OpenAiService(apiKey, Duration.ofSeconds(55));
+    int numRetries = 3;
+    for (int i = 0; i < numRetries; i++) {
+        try {
+            ChatCompletionRequest chatCompletionRequest = new ChatCompletionRequest();
+            chatCompletionRequest.setModel(this.model);
+            chatCompletionRequest.setTemperature(temperature);
+            chatCompletionRequest.setMessages(messages);
+            chatCompletionRequest.setMaxTokens(maxTokens);
+            openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage().getContent();
+            return openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage().getContent();
+        } catch (OpenAiHttpException e) {
+            if (e.statusCode == 429) {
+                logger.warn('Rate limit exceeded. Retrying after 20 seconds.');
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                continue;
+            } else {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    throw new RuntimeException('Failed to get a response from OpenAI API.');
+} [/INST]  No, there is no code issue of 'Fetch the whole entity only to check existence' in the provided code. The `isEmployeeExist` method in the `EmployeeService` class fetches the whole entity using `findById` and then checks if the entity is present using `isPresent`. This is not an issue of 'Fetch the whole entity only to check existence' as the entity is already fetched and the check is done on the fetched entity.
+ NUMBER: 23
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public OAuthClient updateOpenIDConnectClientVerifiedStatus(UserInfo userInfo, String clientId, boolean verifiedStatus) {
+    ValidateArgument.required(userInfo, "User info");
+    ValidateArgument.requiredNotBlank(clientId, "Client ID");
+    
+    if (!authManager.isACTTeamMemberOrAdmin(userInfo)) {
+        throw new UnauthorizedException("You must be an administrator or a member of the ACT team to update the verification status of a client");
+    }
+
+    OAuthClient currentClient = oauthClientDao.selectOAuthClientForUpdate(clientId);
+
+    if (verifiedStatus != BooleanUtils.isTrue(currentClient.getVerified())) {
+        currentClient.setVerified(verifiedStatus);
+        currentClient.setModifiedOn(new Date());
+        currentClient.setEtag(UUID.randomUUID().toString());
+        oauthClientDao.updateOAuthClient(currentClient);
+    }
+
+    return oauthClientDao.getOAuthClient(clientId);
+ [/INST]  Yes, there is a code issue of "Fetch the whole entity only to check existence" in the `updateOpenIDConnectClientVerifiedStatus` method.
+
+The method fetches the entire `OAuthClient` entity for the given `clientId` using `oauthClientDao.selectOAuthClientForUpdate(clientId)`, and then checks if the `verifiedStatus` is different from the current `verified` status of the client. If it is different, the method updates the `verified` status and other fields of the client.
+
+However, this approach has a performance issue. Instead of fetching the entire entity, the method could have simply checked if the client exists using `oauthClientDao.exists(clientId)`, which would have returned a boolean value indicating whether the client exists or not. This would have avoided fetching the entire entity and would have been more efficient.
+
+Therefore, the code issue of "Fetch the whole entity only to check existence" is present in this method.
+ NUMBER: 24
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+private void showUnitSpinner() {
+    SQLiteDatabase db = mDbHelper.getReadableDatabase();
+    Cursor cursor = db.query(UnitContract.UnitEntry.TABLE_NAME, null, null, null, null, null, null);
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Convert to");
+    String[] units = new String[mUnitNameArray.size()];
+    builder.setItems(mUnitNameArray.toArray(units), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Toast.makeText(FoodViewActivity.this, "You clicked on " + mUnitNameArray.get(i), Toast.LENGTH_LONG).show();
+                    dialogInterface.dismiss();
+                }
+            });
+    builder.show();
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code is using the `findById` method of the `EmployeeRepository` class to fetch the `Employee` entity with the given `id`, and then checking if the `Optional` returned by the method is present or not. This is a valid way to check if an entity exists in the database or not.
+ NUMBER: 25
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+private boolean isFeedbackSessionViewableTo(
+        FeedbackSessionAttributes session,
+        String userEmail) throws EntityDoesNotExistException {
+
+    if (fsDb.getFeedbackSession(
+            session.courseId,
+            session.feedbackSessionName) == null) {
+        throw new EntityDoesNotExistException(
+                "Trying to get a feedback session that does not exist.");
+    }
+    // Check for private type first.
+    if (session.feedbackSessionType == FeedbackSessionType.PRIVATE) {
+        return session.creatorEmail.equals(userEmail);
+    }
+    // Allow all instructors to view always
+    InstructorAttributes instructor = instructorsLogic.
+            getInstructorForEmail(session.courseId, userEmail);
+    if (instructor != null) {
+        return instructorsLogic.isEmailOfInstructorOfCourse(
+                instructor.email, session.courseId);
+    }
+    // Allow viewing if session is viewable to students
+    return isFeedbackSessionViewableToStudents(session);
+} [/INST]  Yes, there is a code issue of "Fetch the whole entity only to check existence" in the following code:
+```
+if (fsDb.getFeedbackSession(
+        session.courseId,
+        session.feedbackSessionName) == null) {
+    throw new EntityDoesNotExistException(
+            "Trying to get a feedback session that does not exist.");
+}
+```
+This code fetches the entire `FeedbackSession` entity with the given `courseId` and `feedbackSessionName`, and then checks if it is null. However, this is not necessary, as the `findById()` method already returns an `Optional<FeedbackSession>` that can be used to check if the entity exists.
+
+Instead of fetching the entire entity, the code should use the `findById()` method to check if the entity exists, like this:
+```
+Optional<FeedbackSession> feedbackSession = fsDb.findById(session.courseId, session.feedbackSessionName);
+if (!feedbackSession.isPresent()) {
+    throw new EntityDoesNotExistException(
+            "Trying to get a feedback session that does not exist.");
+}
+```
+This code is more efficient and avoids fetching unnecessary data.
+ NUMBER: 26
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public String loginUser(String username, String password) {
+    User user = getByUserName(username);
+    if (user == null) {
+        logger.info("Failed to find user in DB:" + username);
+    } else
+        logger.info("Getting from DB user:" + username);
+
+    return (user != null) && (Password.checkPassword(password, user.getSalt(), user.getPassword())) ?
+            getByUserName(username).getFirstname() :
+            null;
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The `getByUserName` method is used to retrieve a `User` entity from the database based on the provided username, and the `User` entity is then checked for existence using the `isPresent` method. This approach is more efficient than fetching the whole entity and then checking its existence, as it only retrieves the necessary data from the database.
+ NUMBER: 27
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public Review getReviewById(Long reviewId) {
+
+    if (reviewRepository.findById(reviewId).isPresent()) {
+        return reviewRepository.findById(reviewId).get();
+    } else {
+        return null;
+    }
+} [/INST]  Yes, there is a code issue of "Fetch the whole entity only to check existence" in the `getReviewById` method.
+
+The method fetches the whole `Review` entity by its ID, and then checks if it is present in the database. However, this approach is inefficient and can lead to performance issues, especially if the `Review` entity is large or if the database is large.
+
+A better approach would be to use the `findById` method of the `ReviewRepository` to check if the `Review` entity exists in the database, without fetching the entire entity. This can be done by using the `Optional` type, as in the `isEmployeeExist` method, to check if the `Review` entity exists in the database.
+
+Here's an example of how the `getReviewById` method could be rewritten to use the `findById` method of the `ReviewRepository` to check if the `Review` entity exists in the database:
+```
+public Review getReviewById(Long reviewId) {
+    Optional<Review> review = reviewRepository.findById(reviewId);
+    if (review.isPresent()) {
+        return review.get();
+    } else {
+        return null;
+    }
+}
+```
+By using the `findById` method of the `ReviewRepository`, the method only fetches the `Review` entity if it exists in the database, which can improve performance and reduce the amount of data that needs to be fetched.
+ NUMBER: 28
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public String getConversationFeedback(String conversationId) {
+    StringBuilder urlBuilder = new StringBuilder(getFeedbackUrl());
+    if (!TextUtils.isEmpty(conversationId)) {
+        urlBuilder.append("/");
+        urlBuilder.append(conversationId);
+    }
+    String response = httpRequestUtils.getResponse(urlBuilder.toString(), "application/json", "application/json");
+
+    Utils.printLog(context, TAG, "Get feedback response: " + response);
+
+    return httpRequestUtils.getResponse(urlBuilder.toString(), "application/json", "application/json");
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code is using the `findById` method of the `EmployeeRepository` to retrieve an `Optional<Employee>` object, which is then checked using the `isPresent` method to determine if an employee with the specified ID exists. This is a more efficient way of checking for the existence of an entity than fetching the whole entity and then checking its properties.
+ NUMBER: 29
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public Task findTask(Long taskId) {
+    check();
+    Task task = null;
+    if( this.pessimisticLocking ) {
+        task = this.em.find( TaskImpl.class, taskId, LockModeType.PESSIMISTIC_FORCE_INCREMENT );
+    }
+    task = this.em.find( TaskImpl.class, taskId );
+    return task;
+}
+ [/INST]  Yes, there is a code issue of 'Fetch the whole entity only to check existence' in the following code:
+
+public Task findTask(Long taskId) {
+    check();
+    Task task = null;
+    if( this.pessimisticLocking ) {
+        task = this.em.find( TaskImpl.class, taskId, LockModeType.PESSIMISTIC_FORCE_INCREMENT );
+    }
+    task = this.em.find( TaskImpl.class, taskId );
+    return task;
+}
+
+The issue is that the code is fetching the whole entity (TaskImpl) even though it only needs to check if the entity exists. This can result in unnecessary data transfer and increase the load on the database.
+
+A better approach would be to use the `findById` method of the `EntityManager` to check if the entity exists without fetching the whole entity. For example:
+
+public Task findTask(Long taskId) {
+    check();
+    return this.em.find(TaskImpl.class, taskId);
+}
+
+This way, the code only fetches the ID of the entity, which is much more efficient than fetching the whole entity.
+ NUMBER: 30
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.
+<</SYS>>
+
+The following 1 code examples contan a code issue of 'Fetch the whole entity only to check existence':
+public class EmployeeService {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public boolean isEmployeeExist(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.isPresent();
+    }
+}
+According to the above examples, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes?
+public void removeHUDMessage(final int key) {
+    if (this.hudMessages.containsKey(key)) {
+        this.hudMessages.remove(key);
+    }
+} [/INST]  No, there is no code issue of "Fetch the whole entity only to check existence" in the provided code. The code is using the `containsKey` method to check if the key exists in the map, and then removing it if it does. This is a more efficient way of checking for the existence of a key in a map than fetching the whole entity and checking its presence.

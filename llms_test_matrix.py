@@ -2,7 +2,14 @@ import json
 import os
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import argparse
 
+def parse_args():
+    parse = argparse.ArgumentParser(description='llms test')
+    parse.add_argument('-p', '--generate_result', default="cl7_test_result_sys1_1p1ex.json", type=str, help='generate result file name')
+    parse.add_argument('-g', '--groundtruth', default="test_data_groundtruth.json", type=str, help='groundtruth file name')
+    args = parse.parse_args()
+    return args
 
 def read_json(file_name, folder_name="result"):
     file_path = os.path.join(folder_name, file_name)
@@ -13,18 +20,15 @@ def read_json(file_name, folder_name="result"):
 
 
 
-def main() -> int:
-    # output_data_json_path = "cl7_example_description_oneprompt_According to the above example, answer the following question with only 'Yes' or 'No' - is there any code issue of 'Fetch the whole entity only to check existence' in the following codes.json"
-    output_data_json_path = "cl7_test_result.json"
-    groundtruth_data_json_path = "test_data_groundtruth.json"
-    output_data_dict = read_json(output_data_json_path)
-    groundtruth_data_dict = read_json(groundtruth_data_json_path, folder_name=".")
+def main(output_data_json_file , groundtruth_data_json_file) -> int:
+    output_data_dict = read_json(output_data_json_file)
+    groundtruth_data_dict = read_json(groundtruth_data_json_file, folder_name=".")
 
     pre = []
     gt = []
     length = len(output_data_dict)
     black_space_for_codellama = "  "
-    if not output_data_json_path.startswith('cl'):
+    if not output_data_json_file.startswith('cl'):
         black_space_for_codellama=""
     for i in range(length):
         # print(output_data_dict[str(i+1)])
@@ -62,6 +66,8 @@ def main() -> int:
 
 
 if __name__ == '__main__':
-  main()
+  
+  args = parse_args()
+  main(args.generate_result, args.groundtruth)
 
 

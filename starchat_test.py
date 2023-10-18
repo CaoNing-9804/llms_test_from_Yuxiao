@@ -30,7 +30,11 @@ os.environ['CUDA_VISIBLE_DEVICES'] = "0,1,3"
 # You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.\
 # """
 
-DEFAULT_SYSTEM_PROMPT = ""
+SYSTEM_PROMPT_LIST = [
+  "You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.",
+  "You are a helpful, respectful and honest assistant with a deep knowledge of code and software design. Always answer as helpfully as possible.",
+  ""
+]
 
 
 def parse_args():
@@ -38,7 +42,8 @@ def parse_args():
     parse.add_argument('-m', '--model', default="HuggingFaceH4/starchat-beta", type=str, help='Model Name')
     parse.add_argument('-t', '--test_data', default="test_data_groundtruth.json", type=str, help='Test data file path')
     parse.add_argument('-e', '--example_data', default="example_data_groundtruth.json", type=str, help='Example data file path')
-    parse.add_argument('-n', '--num_ex', default="1", type=int, help='Number of code examples provided')
+    parse.add_argument('-s', '--system_prompt', default=1, type=int, help='System prompt selection')
+    parse.add_argument('-n', '--num_ex', default=1, type=int, help='Number of code examples provided')
     parse.add_argument('-o', '--output', default="starchat_test_result", type=str, help='Output file name')
 
     args = parse.parse_args()
@@ -66,13 +71,13 @@ def write_txt(data, file_name, folder_name = "result"):
     file.write(data)
 
 ##prompt
-def get_starchat_prompt(chat_history:str, usr_input: str, index_num: int) -> str:
+def get_starchat_prompt(chat_history:str, usr_input: str, index_num: int, sys_prompt_index: int ) -> str:
   system_token: str = "<|system|>"
   user_token: str = "<|user|>"
   assistant_token: str = "<|assistant|>"
   end_token: str = "<|end|>"
   if index_num==1:
-    prompt = system_token + "\n" + DEFAULT_SYSTEM_PROMPT + end_token + "\n"
+    prompt = system_token + "\n" + SYSTEM_PROMPT_LIST[sys_prompt_index] + end_token + "\n"
     prompt += user_token + "\n" + usr_input + end_token + "\n"
     prompt += assistant_token + "\n"
     return prompt
@@ -89,7 +94,7 @@ def get_starchat_prompt(chat_history:str, usr_input: str, index_num: int) -> str
 
 
 
-def main(model_name, test_data_json_path, example_data_json_path, output_name, ex_num) -> int:
+def main(model_name, test_data_json_path, example_data_json_path, system_prompt_index, output_name, ex_num) -> int:
 
   # Load base model
   model = AutoModelForCausalLM.from_pretrained(
@@ -159,7 +164,7 @@ def main(model_name, test_data_json_path, example_data_json_path, output_name, e
     prompt_history=[]
     for usr_input in usr_inputs:
       index_num+=1
-      prompt_temp = get_starchat_prompt(chat_history, usr_input, index_num)
+      prompt_temp = get_starchat_prompt(chat_history, usr_input, index_num, system_prompt_index)
       prompt_history.append(prompt_temp)
       # response_result = pipe(prompt_temp, max_new_tokens=256, do_sample=True, temperature=0.2, top_k=50, top_p=0.95, eos_token_id=49155)
       response_result = pipe(prompt_temp, do_sample=True, temperature=0.2, top_k=50, top_p=0.95, eos_token_id=49155)
@@ -181,4 +186,4 @@ def main(model_name, test_data_json_path, example_data_json_path, output_name, e
 
 if __name__ == '__main__':
   args = parse_args()
-  main(args.model, args.test_data, args.example_data, args.output, args.num_ex)
+  main(args.model, args.test_data, args.example_data, args.system_prompt, args.output, args.num_ex)
